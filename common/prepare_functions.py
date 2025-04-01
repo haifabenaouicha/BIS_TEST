@@ -10,9 +10,6 @@ def prepare_orders(orders_df):
         .withColumn("Quantity", col("Quantity").cast("int")) \
         .withColumn("InvoiceDate", to_timestamp(col("InvoiceDate"), "M/d/yyyy H:mm")) \
         .withColumn("CustomerID", col("CustomerID").cast("string"))
-
-
-
 def prepare_products(products_df):
     """
     Clean and cast raw products DataFrame to match dim_products schema.

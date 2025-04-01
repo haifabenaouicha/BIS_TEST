@@ -2,7 +2,7 @@
 
 ## Overview
 
-**BIS_TEST** is a modular PySpark-based ETL framework for processing and transforming e-commerce data. The project supports both batch and streaming workflows, utilizes Delta Lake for reliability, and is structured for easy deployment on platforms like Cloudera.
+**BIS_TEST** is a modular PySpark-based ETL framework for processing and transforming e-commerce data. The project supports both batch and streaming workflows (streaming workflows didn't work for me so I kept everything in batch), utilizes Delta Lake for reliability, and is structured for easy deployment on platforms like Cloudera.
 
 ---
 
@@ -78,6 +78,7 @@ app {
 ---
 
 ### `FactLoadJob`
+**Please note streaming approach didn't work for me and I was too tired to make it run smoothly**
 
 **Purpose:** Process real-time orders data using Spark Structured Streaming and join with existing dimensional data for analytics.
 

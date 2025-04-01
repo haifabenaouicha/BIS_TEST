@@ -3,6 +3,7 @@ from pyspark.sql import DataFrame
 from base_execute import BaseExecute
 from pyspark.sql.utils import AnalysisException
 
+# for now this class is not used , it will be called if we decide to use CDC for dim tables and upsert the dim tbales data daily
 class CdcDimTable(BaseExecute):
     def __init__(self, table_path: str, primary_key: str, spark):
         super().__init__(spark)

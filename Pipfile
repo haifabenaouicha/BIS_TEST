@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 pyspark = "*"
 kafka-python = "*"
-pep8 = "*"
+flake8 = "*"
 nose = "*"
 coverage = "*"
 pyhocon = "*"
