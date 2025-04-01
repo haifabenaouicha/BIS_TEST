@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pyspark = "*"
+kafka-python = "*"
+pep8 = "*"
+nose = "*"
+coverage = "*"
+pyhocon = "*"
+pandas = "*"
+boto3 = "*"
+pytest-spark="*"
+delta-spark ="*"
+pyarrow ="*"
+chispa ="*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
+python_full_version = "3.9.6"
