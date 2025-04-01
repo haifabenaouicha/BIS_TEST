@@ -7,7 +7,6 @@ from common.prepare_functions import prepare_products
 from common.transformations import top_10_countries_by_customers
 
 class DimLoadJob(Execute, BaseExecute):
-
     def execute(self):
         self.run()
 
