@@ -26,3 +26,21 @@ class BaseExecute:
             else:
                 self.logger.info("Initializing SparkSession for cluster (no config overrides).")
                 self.spark = SparkSession.builder.getOrCreate()
+
+    def segregate_valid_from_invalid_data(self, df, condition, error_path):
+        """
+        Filters valid/invalid rows from a DataFrame based on a condition.
+        Writes invalid rows to the specified path only if they exist.
+        Returns valid rows.
+        """
+        valid_rows = df.filter(condition)
+        invalid_rows = df.filter(~condition)
+
+        invalid_count = invalid_rows.count()
+        if invalid_count > 0:
+            self.logger.info(f"Writing {invalid_count} invalid rows to {error_path}")
+            invalid_rows.write.mode("overwrite").csv(error_path)
+        else:
+            self.logger.info("No invalid rows to write.")
+
+        return valid_rows

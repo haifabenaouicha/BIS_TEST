@@ -3,11 +3,11 @@ from pyspark.sql.functions import col
 from common.base_execute import BaseExecute
 from common.execute import Execute
 from common.conf_loader import load_config
-from common.transformations import (
-    top_10_countries_by_customers
-)
+from common.prepare_functions import prepare_products
+from common.transformations import top_10_countries_by_customers
 
 class DimLoadJob(Execute, BaseExecute):
+
     def execute(self):
         self.run()
 
@@ -16,29 +16,47 @@ class DimLoadJob(Execute, BaseExecute):
         super().__init__(config=self.config, spark_session=None)
 
     def run(self):
-        print("Starting DimLoadJob...")
+        self.logger.info("Starting DimLoadJob...")
         products_conf = self.config["app"]["sources"]["products_raw"]
         customers_conf = self.config["app"]["sources"]["customers_raw"]
         products_path = products_conf["input_path"]
         customers_path = customers_conf["input_path"]
 
-        # Load and validate products
+        self.logger.info(f"Reading products from: {products_path}")
         products = self.spark.read.options(**products_conf["options"]).csv(products_path)
-        valid_products = products.filter(col("StockCode").isNotNull() & col("Description").isNotNull())
-        invalid_products = products.filter(~(col("StockCode").isNotNull() & col("Description").isNotNull()))
+        self.logger.info("Validating products data...")
+        valid_products = self.segregate_valid_from_invalid_data(
+            products,
+            col("StockCode").isNotNull() &
+            col("StockCode").rlike("^[0-9]") &
+            col("Description").isNotNull(),
+            "data/errors/products"
+        )
+        self.logger.info("Preparing and writing valid products to parquet.")
+        prepare_products(valid_products).coalesce(1).write.mode("overwrite").format("parquet").save(
+            self.config["app"]["sources"]["products"]["output_path"]
+        )
 
-        valid_products.write.mode("overwrite").format("delta").save(self.config["app"]["sources"]["products"]["output_path"])
-        invalid_products.write.mode("overwrite").csv("data/errors/products")
-
-        # Load and validate customers
+        self.logger.info(f"Reading customers from: {customers_path}")
         customers = self.spark.read.options(**customers_conf["options"]).csv(customers_path)
-        valid_customers = customers.filter(col("CustomerID").isNotNull() & col("Country").isNotNull())
-        invalid_customers = customers.filter(~(col("CustomerID").isNotNull() & col("Country").isNotNull()))
 
-        valid_customers.write.mode("overwrite").format("delta").save(self.config["app"]["sources"]["customers"]["output_path"])
-        invalid_customers.write.mode("overwrite").csv("data/errors/customers")
+        self.logger.info("Validating customers data...")
+        valid_customers = self.segregate_valid_from_invalid_data(
+            customers,
+            col("CustomerID").isNotNull() & col("Country").isNotNull(),
+            "data/errors/customers"
+        )
 
-        # Example transformation on customers
+        self.logger.info("Writing valid customers to parquet.")
+        valid_customers.coalesce(1).write.mode("overwrite").format("parquet").save(
+            self.config["app"]["sources"]["customers"]["output_path"]
+        )
+
+        self.logger.info("Calculating top 10 countries by customer count...")
         top_countries = top_10_countries_by_customers(valid_customers)
-        top_countries.write.mode("overwrite").format("delta").save(self.config["app"]["sources"]["top_ten_countries_for_customers"]["output_path"])
-        print("DimLoadJob complete.")
+
+        self.logger.info("Writing top 10 countries result to parquet.")
+        top_countries.coalesce(1).write.mode("overwrite").format("parquet").save(
+            self.config["app"]["sources"]["top_ten_countries_for_customers"]["output_path"]
+        )
+        self.logger.info("DimLoadJob complete.")
