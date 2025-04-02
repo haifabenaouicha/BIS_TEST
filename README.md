@@ -78,7 +78,8 @@ app {
 ---
 
 ### `FactLoadJob`
-**Please note streaming approach didn't work for me and I was too tired to make it run smoothly**
+> ⚠️ **Please note:** Streaming approach didn't work for me and I was too tired to make it run smoothly.
+
 
 **Purpose:** Process real-time orders data using Spark Structured Streaming and join with existing dimensional data for analytics.
 
@@ -206,15 +207,6 @@ pipenv run pytest
 
 ---
 
-## Notes
-
-- You should **not package** `job.conf` in the wheel — keep it external and configurable.
-- Make sure data files (CSV) are available in the specified paths when running locally.
-
----
-
 ## Author
 
 **Haifa Ben Aouicha**
-
-
