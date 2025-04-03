@@ -128,4 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 # Ignore everything inside the data folder
-data/*
+
+data/errors/*
+data/output/*
