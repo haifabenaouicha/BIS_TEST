@@ -16,5 +16,6 @@ spark-submit \
   --conf "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension" \
   --conf "spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog" \
   --packages io.delta:delta-core_2.12:2.4.0 \
-  main.py conf/job.conf
+  --py-files /Users/haifabenaouicha/Documents/BIS_TEST/dist/bis_test-1.0.0-py3-none-any.whl \
+  main.py --job dim --conf conf/job.conf
 

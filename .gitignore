@@ -130,4 +130,8 @@ dmypy.json
 # Ignore everything inside the data folder
 
 data/errors/*
+data/checkpoints/*
 data/output/*
+.DS_Store
+dependencies/*
+deps.zip

@@ -2,7 +2,7 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "**" ]  # Trigger on push to any branch
   pull_request:
     branches: [ main ]
 
@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -39,7 +39,7 @@ jobs:
         pipenv run python setup.py bdist_wheel
 
     - name: Upload built wheel
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: bis_jobs_wheel
         path: dist/*.whl

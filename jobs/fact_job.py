@@ -1,10 +1,9 @@
-from pyspark.sql.functions import to_timestamp, col
-
 # Project-specific imports
+from pyspark.sql.types import TimestampType
+
 from common.base_execute import BaseExecute
 from common.conf_loader import load_config
 from common.execute import Execute
-from common.prepare_functions import prepare_orders
 from common.transformations import (
     revenue_by_country_streaming,
     price_vs_volume_streaming,
@@ -27,7 +26,8 @@ class FactLoadJob(Execute, BaseExecute):
             StructField("StockCode", StringType(), True),
             StructField("Quantity", StringType(), True),
             StructField("InvoiceDate", StringType(), True),
-            StructField("CustomerID", StringType(), True)
+            StructField("CustomerID", StringType(), True),
+            StructField("ArrivalTimestamp", TimestampType(), True)
         ])
 
     def run(self):
@@ -39,15 +39,15 @@ class FactLoadJob(Execute, BaseExecute):
 
         # Read orders CSV file as batch with schema
         self.logger.info(f"Reading orders batch data from: {orders_path}")
-        orders_df = self.spark.read \
+        orders_df = self.spark.readStream \
             .schema(self.get_orders_schema()) \
             .options(**orders_conf["options"]) \
             .csv(orders_path)
 
         # Parse timestamp and prepare cleaned orders DataFrame
         self.logger.info("Preparing orders data...")
-        orders_df = orders_df.withColumn("InvoiceDate", to_timestamp(col("InvoiceDate"), "M/d/yyyy H:mm"))
-        prepared_orders = prepare_orders(orders_df)
+
+        prepared_orders = orders_df
 
         # Read reference dimension tables (batch-parquet)
         self.logger.info("Reading products and customers dimensions...")
@@ -68,15 +68,38 @@ class FactLoadJob(Execute, BaseExecute):
 
         # Write transformed outputs as Parquet (overwrite mode)
         self.logger.info("Writing revenue_by_country to Parquet...")
-        revenue_by_country.write.mode("overwrite").parquet("data/output/revenue_by_country")
 
-        self.logger.info("Writing price_vs_volume to Parquet...")
-        price_vs_volume_value.write.mode("overwrite").parquet("data/output/price_vs_volume")
+        def write_to_parquet(batch_df, batch_id, output):
+            batch_df.write \
+                .mode("overwrite") \
+                .parquet(output)
 
-        self.logger.info("Writing top_3_products to Parquet...")
-        top_products.write.mode("overwrite").parquet("data/output/top_3_products")
+        revenue_by_country_query = revenue_by_country.writeStream \
+            .outputMode("complete") \
+            .foreachBatch(lambda df, id: write_to_parquet(df, id, "data/output/revenue_by_country")) \
+            .option("checkpointLocation", "data/checkpoints/revenue_by_country") \
+            .start()
 
-        self.logger.info("FactLoadJob (batch mode) complete.")
+        # self.logger.info("Writing price_vs_volume to Parquet...")
+        price_vs_volume_query = price_vs_volume_value.writeStream \
+            .outputMode("complete") \
+            .foreachBatch(lambda df, id: write_to_parquet(df, id, "data/output/price_vs_volume")) \
+            .option("checkpointLocation", "data/checkpoints/price_vs_volume") \
+            .start()
+
+        # self.logger.info("Writing top_3_products to Parquet...")
+        # top_products_query= top_products.writeStream \
+        #     .outputMode("append") \
+        #     .foreachBatch(lambda df, id: write_to_parquet(df, id, "data/output/top_3_products")) \
+        #     .option("checkpointLocation", "data/checkpoints/top_3_products") \
+        #     .start()
+        # top_products.write.mode("overwrite").parquet("data/output/top_3_products")
+        # Now wait for all of them
+        self.logger.info("All streams started, awaiting termination...")
+        revenue_by_country_query.awaitTermination()
+        price_vs_volume_query.awaitTermination()
+
+        self.logger.info("FactLoadJob (stream mode) complete.")
 
     def execute(self):
         # Entrypoint method to trigger the job

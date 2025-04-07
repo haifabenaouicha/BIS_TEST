@@ -1,11 +1,10 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "bcfb4fc43d46641ac10878d8bd33310b09374c98f2808eed36eb72983f741e75"
+            "sha256": "b3a3df93ad6d0930449a15341f2914d8cd505c0d06c7bc4df90c6477fed33262"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_full_version": "3.9.6",
             "python_version": "3.9"
         },
         "sources": [
@@ -19,20 +18,20 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:1d3c6fc63a9efba0af8b531ec6b7f7c6b0ef197bf3dcd875f03c9097ac68b58f",
-                "sha256:2f2b8f82a5d7f89283973bf2cab771b90c09348799e78b2a25c60cd22c443514"
+                "sha256:09ee85ba70a88286bba0d1bf5f0460a4b3bde52d162216accfe637b8bfac351b",
+                "sha256:e584d9d33808633e73af3d962e22cf2cea91a38bc5a17577bb25618f8ded504f"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==1.37.24"
+            "version": "==1.37.28"
         },
         "botocore": {
             "hashes": [
-                "sha256:a0bcc3c376a371f2c11afcbcc9917010c1c0a701d0e45d1ea3ec3bddeb06a8ff",
-                "sha256:f1a55332cca85a6556af8941cccdaf5d2d00336647d9e89f31174f2361ffb4f2"
+                "sha256:69ea327f70f0607d174c4c2b1dcc87327b9c48e413c9d322179172b614b28e03",
+                "sha256:c26b645d7b125bf42ffc1671b862b47500ee658e3a1c95d2438cb689fc85df15"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==1.37.24"
+            "version": "==1.37.28"
         },
         "chispa": {
             "hashes": [
@@ -172,11 +171,11 @@
         },
         "kafka-python": {
             "hashes": [
-                "sha256:23340cdcd403d4f73564c068fd3b1f4b4be3fc1a89f3ef1a76d46ea889878190",
-                "sha256:7e45be44cc7eb3dcad8b432cc514411454d05971ad26411092577584ee15d67a"
+                "sha256:205953e581c0371cada35bebdacc58ac7dee6c3f9e8d95b9a6a0a7bacc054ca0",
+                "sha256:6765c25440046cdadeb9c31469566be259d50802d27d4f8aae86d9ae755b78e2"
             ],
             "index": "pypi",
-            "version": "==2.1.4"
+            "version": "==2.1.5"
         },
         "mccabe": {
             "hashes": [

@@ -3,6 +3,20 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="/data/errors/products/part-00000-3d5f12c8-d834-49b1-9485-ad2f6c5977cc-c000.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/data/errors/products/part-00000-a8cb070c-c2d1-46b4-a274-3333a797f565-c000.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/data/raw/customers.csv">
           <value>
             <Attribute>
@@ -11,6 +25,48 @@
           </value>
         </entry>
         <entry key="/data/raw/orders.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/data/raw/orders/orders.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/data/raw/orders/part-00000-01dae4dc-8194-4a3b-8764-51e7f12817cd-c000.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/data/raw/orders/part-00004-01dae4dc-8194-4a3b-8764-51e7f12817cd-c000.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/data/raw/orders/part-00006-01dae4dc-8194-4a3b-8764-51e7f12817cd-c000.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/data/raw/orders/part-00008-01dae4dc-8194-4a3b-8764-51e7f12817cd-c000.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/data/raw/orders/part-00009-01dae4dc-8194-4a3b-8764-51e7f12817cd-c000.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

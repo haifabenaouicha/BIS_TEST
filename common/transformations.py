@@ -16,7 +16,8 @@ def top_10_countries_by_customers(customers_df):
 
 def revenue_by_country_streaming(orders_stream_df, products_df, customers_df):
     # Join streaming orders with static products to get UnitPrice
-    enriched_orders = prepare_orders(orders_stream_df).join(
+    enriched_orders = orders_stream_df \
+        .join(
         broadcast(prepare_products(products_df).select("StockCode", "UnitPrice")),
         on="StockCode",
         how="left"
@@ -31,7 +32,8 @@ def revenue_by_country_streaming(orders_stream_df, products_df, customers_df):
         how="left"
     )
     # Aggregate revenue per country
-    return orders_with_country.groupBy("Country") \
+    return orders_with_country \
+        .groupBy("Country") \
         .agg(sum("Revenue").cast(DoubleType()).alias("TotalRevenue")) \
         .fillna({"TotalRevenue": 0.0})
 
